@@ -9,7 +9,7 @@ final filename = 'someimage.png';
 void main() {
   test('Puts File', () async {
     final storage = MockFirebaseStorage();
-    final StorageReference storageRef = storage.ref().child(filename);
+    final storageRef = storage.ref().child(filename);
     final image = File(filename);
     final task = storageRef.putFile(image);
     await task.onComplete;

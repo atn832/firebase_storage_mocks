@@ -8,8 +8,8 @@ A simple usage example:
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 
 main() {
-  final storage = MockFirebaseStorage();
-  final StorageReference storageRef = storage.ref().child(filename);
+  final storage = MockFirebaseStorage('someimage.png');
+  final storageRef = storage.ref().child(filename);
   final image = File(filename);
   final task = storageRef.putFile(image);
   await task.onComplete;
