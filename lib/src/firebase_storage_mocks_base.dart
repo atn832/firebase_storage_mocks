@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:mockito/mockito.dart';
@@ -14,7 +15,7 @@ class MockFirebaseStorage extends Mock implements FirebaseStorage {
 
 class MockStorageReference extends Mock implements StorageReference {
   final String _path;
-  final Map<String, MockStorageReference> children = Map();
+  final Map<String, MockStorageReference> children = {};
   File storedFile;
 
   MockStorageReference([this._path = '']);
@@ -30,6 +31,11 @@ class MockStorageReference extends Mock implements StorageReference {
   @override
   StorageUploadTask putFile(File file, [StorageMetadata metadata]) {
     storedFile = file;
+    return MockStorageUploadTask();
+  }
+
+  @override
+  StorageUploadTask putData(Uint8List data, [StorageMetadata metadata]) {
     return MockStorageUploadTask();
   }
 
