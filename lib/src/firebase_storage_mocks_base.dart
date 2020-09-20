@@ -40,6 +40,11 @@ class MockStorageReference extends Mock implements StorageReference {
   }
 
   @override
+  Future<void> delete() {
+    return Future.value();
+  }
+
+  @override
   String get path => _path;
 
   @override
