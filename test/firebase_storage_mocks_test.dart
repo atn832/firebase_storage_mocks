@@ -8,22 +8,35 @@ import 'package:test/test.dart';
 final filename = 'someimage.png';
 
 void main() {
-  test('Puts File', () async {
-    final storage = MockFirebaseStorage();
-    final storageRef = storage.ref().child(filename);
-    final image = File(filename);
-    final task = storageRef.putFile(image);
-    await task.onComplete;
-    expect(await getGsLink(storageRef), equals('gs://some-bucket/someimage.png'));
-  });
+  group('MockFirebaseStorage Tests', () {
+    MockFirebaseStorage storage;
 
-  test('Puts Data', () async {
-    final storage = MockFirebaseStorage();
-    final storageRef = storage.ref().child(filename);
-    final imageData = Uint8List(256);
-    final task = storageRef.putData(imageData);
-    await task.onComplete;
-    expect(await getGsLink(storageRef), equals('gs://some-bucket/someimage.png'));
+    setUpAll(() {
+      storage = MockFirebaseStorage();
+    });
+
+    test('Puts File', () async {
+      final storageRef = storage.ref().child(filename);
+      final image = File(filename);
+      final task = storageRef.putFile(image);
+      final snap = await task.onComplete;
+
+      expect(await getGsLink(snap.ref),
+          equals('gs://some-bucket/someimage.png'));
+      expect(storage.storedFilesMap.containsKey('/$filename'), isTrue);
+    });
+
+    test('Puts Data', () async {
+      final storage = MockFirebaseStorage();
+      final storageRef = storage.ref().child(filename);
+      final imageData = Uint8List(256);
+      final task = storageRef.putData(imageData);
+      final snap = await task.onComplete;
+
+      expect(await getGsLink(snap.ref),
+          equals('gs://some-bucket/someimage.png'));
+      expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
+    });
   });
 }
 
