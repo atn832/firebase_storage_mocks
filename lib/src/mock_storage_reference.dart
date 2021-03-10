@@ -5,7 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:mockito/mockito.dart';
 
-class MockStorageReference extends Mock implements StorageReference {
+class MockStorageReference extends Mock implements Reference {
   final MockFirebaseStorage _storage;
   final String _path;
   final Map<String, MockStorageReference> children = {};
@@ -13,7 +13,7 @@ class MockStorageReference extends Mock implements StorageReference {
   MockStorageReference(this._storage, [this._path = '']);
 
   @override
-  StorageReference child(String path) {
+  Reference child(String path) {
     if (!children.containsKey(path)) {
       children[path] = MockStorageReference(_storage, '$_path/$path');
     }
@@ -21,13 +21,13 @@ class MockStorageReference extends Mock implements StorageReference {
   }
 
   @override
-  StorageUploadTask putFile(File file, [StorageMetadata metadata]) {
+  UploadTask putFile(File file, [SettableMetadata metadata]) {
     _storage.storedFilesMap[_path] = file;
     return MockStorageUploadTask(this);
   }
 
   @override
-  StorageUploadTask putData(Uint8List data, [StorageMetadata metadata]) {
+  UploadTask putData(Uint8List data, [SettableMetadata metadata]) {
     _storage.storedDataMap[_path] = data;
     return MockStorageUploadTask(this);
   }
@@ -59,5 +59,5 @@ class MockStorageReference extends Mock implements StorageReference {
   FirebaseStorage getStorage() => _storage;
 
   @override
-  StorageReference getRoot() => MockStorageReference(_storage);
+  Reference getRoot() => MockStorageReference(_storage);
 }

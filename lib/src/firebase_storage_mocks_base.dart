@@ -9,26 +9,26 @@ class MockFirebaseStorage extends Mock implements FirebaseStorage {
   final Map<String, Uint8List> storedDataMap = {};
 
   @override
-  StorageReference ref() {
+  Reference ref([String path]) {
     return MockStorageReference(this);
   }
 }
 
-class MockStorageUploadTask extends Mock implements StorageUploadTask {
-  final StorageReference reference;
+class MockStorageUploadTask extends Mock implements UploadTask {
+  final Reference reference;
 
   MockStorageUploadTask(this.reference);
 
   @override
-  Future<StorageTaskSnapshot> get onComplete =>
+  Future<TaskSnapshot> get onComplete =>
       Future.value(MockStorageTaskSnapshot(reference));
 }
 
-class MockStorageTaskSnapshot extends Mock implements StorageTaskSnapshot {
-  final StorageReference reference;
+class MockStorageTaskSnapshot extends Mock implements TaskSnapshot {
+  final Reference reference;
 
   MockStorageTaskSnapshot(this.reference);
 
   @override
-  StorageReference get ref => reference;
+  Reference get ref => reference;
 }

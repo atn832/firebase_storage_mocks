@@ -19,7 +19,7 @@ void main() {
       final storageRef = storage.ref().child(filename);
       final image = File(filename);
       final task = storageRef.putFile(image);
-      final snap = await task.onComplete;
+      final snap = await task.whenComplete(null);
 
       expect(await getGsLink(snap.ref),
           equals('gs://some-bucket/someimage.png'));
@@ -31,7 +31,7 @@ void main() {
       final storageRef = storage.ref().child(filename);
       final imageData = Uint8List(256);
       final task = storageRef.putData(imageData);
-      final snap = await task.onComplete;
+      final snap = await task.whenComplete(null);
 
       expect(await getGsLink(snap.ref),
           equals('gs://some-bucket/someimage.png'));
@@ -40,10 +40,10 @@ void main() {
   });
 }
 
-Future<String> getGsLink(StorageReference storageRef) async {
+Future<String> getGsLink(Reference storageRef) async {
   return Uri(
     scheme: 'gs',
-    host: await storageRef.getBucket(),
-    path: storageRef.path,
+    host: storageRef.bucket,
+    path: storageRef.fullPath,
   ).toString();
 }
