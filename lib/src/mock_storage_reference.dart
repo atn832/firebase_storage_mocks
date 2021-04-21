@@ -5,31 +5,31 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
 import 'package:mockito/mockito.dart';
 
-class MockStorageReference extends Mock implements StorageReference {
+class MockReference extends Mock implements Reference {
   final MockFirebaseStorage _storage;
   final String _path;
-  final Map<String, MockStorageReference> children = {};
+  final Map<String, MockReference> children = {};
 
-  MockStorageReference(this._storage, [this._path = '']);
+  MockReference(this._storage, [this._path = '']);
 
   @override
-  StorageReference child(String path) {
+  Reference child(String path) {
     if (!children.containsKey(path)) {
-      children[path] = MockStorageReference(_storage, '$_path/$path');
+      children[path] = MockReference(_storage, '$_path$path');
     }
-    return children[path];
+    return children[path] as Reference;
   }
 
   @override
-  StorageUploadTask putFile(File file, [StorageMetadata metadata]) {
+  UploadTask putFile(File file, [SettableMetadata? metadata]) {
     _storage.storedFilesMap[_path] = file;
-    return MockStorageUploadTask(this);
+    return MockUploadTask(this);
   }
 
   @override
-  StorageUploadTask putData(Uint8List data, [StorageMetadata metadata]) {
+  UploadTask putData(Uint8List data, [SettableMetadata? metadata]) {
     _storage.storedDataMap[_path] = data;
-    return MockStorageUploadTask(this);
+    return MockUploadTask(this);
   }
 
   @override
@@ -44,20 +44,37 @@ class MockStorageReference extends Mock implements StorageReference {
   }
 
   @override
-  String get path => _path;
+  String get bucket {
+    return _storage.bucket;
+  }
 
   @override
-  Future<String> getBucket() => Future.value('some-bucket');
+  String get fullPath {
+    return 'gs://${_storage.bucket}$_path';
+  }
 
   @override
-  Future<String> getPath() => Future.value(_path);
+  String get name {
+    return _path.split('/').last;
+  }
 
   @override
-  Future<String> getName() => Future.value(_path.split('/').last);
+  Reference? get parent {
+    if (_path.split('/').length <= 1) {
+      return null;
+    } else {
+      final sections = _path.split('/');
+      return MockReference(_storage, sections[sections.length - 2]);
+    }
+  }
 
   @override
-  FirebaseStorage getStorage() => _storage;
+  Reference get root {
+    return MockReference(_storage, '/');
+  }
 
   @override
-  StorageReference getRoot() => MockStorageReference(_storage);
+  Future<Uint8List> getData([int maxSize = 10485760]) {
+    return Future.value(_storage.storedDataMap[_path]);
+  }
 }
