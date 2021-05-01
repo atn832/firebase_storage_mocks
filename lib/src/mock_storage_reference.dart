@@ -17,7 +17,7 @@ class MockReference extends Mock implements Reference {
     if (!children.containsKey(path)) {
       children[path] = MockReference(_storage, '$_path$path');
     }
-    return children[path] as Reference;
+    return children[path]!;
   }
 
   @override

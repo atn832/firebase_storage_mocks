@@ -46,13 +46,13 @@ class MockUploadTask extends Mock implements UploadTask {
   @override
   Future<TaskSnapshot> timeout(Duration timeLimit,
       {FutureOr<TaskSnapshot> Function()? onTimeout}) {
-    return delegate.timeout(timeLimit);
+    return delegate.timeout(timeLimit, onTimeout: onTimeout);
   }
 
   @override
   Future<TaskSnapshot> catchError(Function onError,
       {bool Function(Object error)? test}) {
-    return delegate.catchError(onError);
+    return delegate.catchError(onError, test: test);
   }
 
   @override
