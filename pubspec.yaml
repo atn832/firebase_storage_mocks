@@ -1,6 +1,6 @@
 name: firebase_storage_mocks
 description: Mocks for Firebase Storage. Use this package to write unit tests involving Firebase Storage.
-version: 0.2.0
+version: 0.3.0
 homepage: http://blog.wafrat.com
 repository: https://github.com/atn832/firebase_storage_mocks
 

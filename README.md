@@ -11,14 +11,9 @@ main() {
   final storage = MockFirebaseStorage('someimage.png');
   final storageRef = storage.ref().child(filename);
   final image = File(filename);
-  final task = storageRef.putFile(image);
-  await task.onComplete;
+  await storageRef.putFile(image);
   // Prints 'gs://some-bucket//someimage.png'.
-  print(await getGsLink(storageRef));
-}
-
-Future<String> getGsLink(StorageReference storageRef) async {
-  return 'gs://' + await storageRef.getBucket() + '/' + storageRef.path;
+  print(task.snapshot.ref.fullPath);
 }
 ```
 

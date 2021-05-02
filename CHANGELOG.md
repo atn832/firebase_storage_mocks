@@ -1,3 +1,7 @@
+## 0.3.0
+
+- Support version 8.0.0 of firebase_storage. Thank you [GabrielIneichen](https://github.com/GabrielIneichen)!
+
 ## 0.2.0
 
 - Support version 4.0.0 of firebase_storage.
