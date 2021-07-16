@@ -1,10 +1,17 @@
+## 0.4.0
+
+- Support version 9.0.0
+
+## 0.3.0
+
+- Support version 8.0.0 of firebase_storage. Thank you [GabrielIneichen](https://github.com/GabrielIneichen)!
+>>>>>>> 3c7830c8569d26ea069b9bd21699272b9fe45151
 ## 0.2.1
 
 - Implemented `putData()`, `delete()` `getPath()`, `getStorage()` in `MockStorageReference`.
 - `MockFirebaseStorage.ref()` now returns a proper `StorageReference`.
 
 Thanks [Supercaly](https://github.com/Supercaly) for this update!
-
 ## 0.2.0
 
 - Support version 4.0.0 of firebase_storage.
