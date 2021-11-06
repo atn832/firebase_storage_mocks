@@ -15,7 +15,7 @@ class MockReference extends Mock implements Reference {
   @override
   Reference child(String path) {
     if (!children.containsKey(path)) {
-      children[path] = MockReference(_storage, '$_path$path');
+      children[path] = MockReference(_storage, '$_path$path/');
     }
     return children[path]!;
   }
@@ -76,5 +76,10 @@ class MockReference extends Mock implements Reference {
   @override
   Future<Uint8List> getData([int maxSize = 10485760]) {
     return Future.value(_storage.storedDataMap[_path]);
+  }
+
+  @override
+  Future<String> getDownloadURL() {
+    return Future.value(fullPath.substring(0, fullPath.length - 1));
   }
 }
