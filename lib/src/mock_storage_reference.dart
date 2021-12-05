@@ -94,7 +94,6 @@ class MockReference extends Mock implements Reference {
   FullMetadata _createFullMetadata(SettableMetadata? metadata) {
     // ignore: omit_local_variable_types
     final Map<String, dynamic> newMetadata = metadata?.asMap() ?? <String, dynamic>{};
-    final a = _storage.storedMetadata[_path]; //Riguarda customMetadata
 
     newMetadata['bucket'] = _storage.storedMetadata[_path]?.bucket ?? bucket;
     newMetadata['fullPath'] = _storage.storedMetadata[_path]?.fullPath ?? fullPath;
