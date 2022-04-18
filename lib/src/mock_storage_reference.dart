@@ -75,8 +75,9 @@ class MockReference extends Mock implements Reference {
 
   @override
   Future<String> getDownloadURL() {
+    final path = _path.startsWith('/') ? _path : '/$_path';
     return Future.value(
-        'https://firebasestorage.googleapis.com/v0/b/$bucket/o$_path');
+        'https://firebasestorage.googleapis.com/v0/b/$bucket/o$path');
   }
 
   @override
