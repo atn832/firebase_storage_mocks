@@ -43,7 +43,6 @@ void main() {
     test('Ref from url', () async {
       final storage = MockFirebaseStorage();
       final downloadUrl = await storage.ref('/some/path').getDownloadURL();
-      print(downloadUrl);
       final ref = storage.refFromURL(downloadUrl);
       expect(ref, isA<Reference>());
     });
