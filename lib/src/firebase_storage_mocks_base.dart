@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/src/mock_storage_reference.dart';
+import 'package:firebase_storage_mocks/src/utils.dart';
 import 'package:mockito/mockito.dart';
 
 class MockFirebaseStorage extends Mock implements FirebaseStorage {
@@ -14,6 +15,26 @@ class MockFirebaseStorage extends Mock implements FirebaseStorage {
   Reference ref([String? path]) {
     path ??= '/';
     return MockReference(this, path);
+  }
+
+  @override
+  Reference refFromURL(String url) {
+    assert(url.startsWith('gs://') || url.startsWith('http'),
+        "'a url must start with 'gs://' or 'https://'");
+
+    String? path;
+
+    if (url.startsWith('http')) {
+      final parts = partsFromHttpUrl(url);
+
+      assert(parts != null,
+          "url could not be parsed, ensure it's a valid storage url");
+
+      path = parts!['path'];
+    } else {
+      path = pathFromGoogleStorageUrl(url);
+    }
+    return ref(path);
   }
 
   @override
