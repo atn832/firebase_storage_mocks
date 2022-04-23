@@ -2,18 +2,19 @@ Mocks for [Firebase Storage](https://pub.dev/packages/firebase_storage). Use thi
 
 ## Usage
 
-A simple usage example:
-
+A simple usage example: (assumes `assets/someimage.png` exists in project and is included in assets section of pubspec.yaml)
 ```dart
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
-main() {
-  final storage = MockFirebaseStorage('someimage.png');
+main() async {
+  final storage = MockFirebaseStorage();
+  const filename = 'someimage.png';
   final storageRef = storage.ref().child(filename);
-  final image = File(filename);
-  await storageRef.putFile(image);
+  final localImage = await rootBundle.load("assets/$filename");
+  final task = await storageRef.putData(localImage.buffer.asUint8List());
   // Prints 'gs://some-bucket//someimage.png'.
-  print(task.snapshot.ref.fullPath);
+  print(task.ref.fullPath);
 }
 ```
 
