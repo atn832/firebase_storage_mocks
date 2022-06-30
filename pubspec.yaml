@@ -11,7 +11,6 @@ dependencies:
   flutter:
     sdk: flutter
   firebase_storage: ^10.0.0
-  mockito: ^5.0.0
 
 dev_dependencies:
   flutter_test:
