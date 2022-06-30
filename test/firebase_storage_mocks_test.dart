@@ -33,6 +33,19 @@ void main() {
       expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
     });
 
+    test('Get download url', () async {
+      final storage = MockFirebaseStorage();
+      final downloadUrl = await storage.ref('/some/path').getDownloadURL();
+      expect(downloadUrl.startsWith('http'), isTrue);
+      expect(downloadUrl.contains('/some/path'), isTrue);
+    });
+
+    test('Ref from url', () async {
+      final storage = MockFirebaseStorage();
+      final downloadUrl = await storage.ref('/some/path').getDownloadURL();
+      final ref = storage.refFromURL(downloadUrl);
+      expect(ref, isA<Reference>());
+
     test('Set, get and update metadata', () async {
       final storage = MockFirebaseStorage();
       final storageRef = storage.ref().child(filename);
