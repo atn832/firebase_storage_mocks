@@ -23,14 +23,14 @@ class MockReference extends Mock implements Reference {
   @override
   UploadTask putFile(File file, [SettableMetadata? metadata]) {
     _storage.storedFilesMap[_path] = file;
-    _storage.storedMetadata[_path] = _createFullMetadata(metadata);
+    _storage.storedSettableMetadataMap[_path] = metadata?.asMap() ?? {};
     return MockUploadTask(this);
   }
 
   @override
   UploadTask putData(Uint8List data, [SettableMetadata? metadata]) {
     _storage.storedDataMap[_path] = data;
-    _storage.storedMetadata[_path] = _createFullMetadata(metadata);
+    _storage.storedSettableMetadataMap[_path] = metadata?.asMap() ?? {};
     return MockUploadTask(this);
   }
 
@@ -42,8 +42,8 @@ class MockReference extends Mock implements Reference {
     if (_storage.storedDataMap.containsKey(_path)) {
       _storage.storedDataMap.remove(_path);
     }
-    if (_storage.storedMetadata.containsKey(_path)) {
-      _storage.storedMetadata.remove(_path);
+    if (_storage.storedSettableMetadataMap.containsKey(_path)) {
+      _storage.storedSettableMetadataMap.remove(_path);
     }
     return Future.value();
   }
@@ -85,43 +85,31 @@ class MockReference extends Mock implements Reference {
 
   @override
   Future<FullMetadata> updateMetadata(SettableMetadata metadata) {
-    // ignore: omit_local_variable_types
-    final newSettable = _getNewSettableFromFullMetadata(_storage.storedMetadata[_path], metadata);
-    _storage.storedMetadata[_path] = _createFullMetadata(newSettable);
-    return Future<FullMetadata>.value(_storage.storedMetadata[_path]);
-  }
-
-  FullMetadata _createFullMetadata(SettableMetadata? metadata) {
-    // ignore: omit_local_variable_types
-    final Map<String, dynamic> newMetadata = metadata?.asMap() ?? <String, dynamic>{};
-
-    newMetadata['bucket'] = _storage.storedMetadata[_path]?.bucket ?? bucket;
-    newMetadata['fullPath'] = _storage.storedMetadata[_path]?.fullPath ?? fullPath;
-    newMetadata['metadataGeneration'] = _storage.storedMetadata[_path]?.metadataGeneration ?? 'metadataGeneration';
-    newMetadata['md5Hash'] = _storage.storedMetadata[_path]?.md5Hash ?? 'md5Hash' ;
-    newMetadata['metageneration'] = _storage.storedMetadata[_path]?.metadataGeneration ?? 'metageneration';
-    newMetadata['name'] = _storage.storedMetadata[_path]?.name ?? name;
-    newMetadata['size'] = _storage.storedMetadata[_path]?.size 
-      ?? _storage.storedDataMap[_path]?.lengthInBytes ?? _storage.storedFilesMap[_path]!.lengthSync();
-    newMetadata['creationTimeMillis'] = _storage.storedMetadata[_path]?.timeCreated?.millisecondsSinceEpoch 
-      ?? DateTime.now().millisecondsSinceEpoch;
-    newMetadata['updatedTimeMillis'] = DateTime.now().millisecondsSinceEpoch;
-    return FullMetadata(newMetadata);
-  }
-
-  SettableMetadata _getNewSettableFromFullMetadata(FullMetadata? fullMetadata, SettableMetadata settableMetadata) {
-    return SettableMetadata(
-      cacheControl: settableMetadata.cacheControl ?? fullMetadata?.cacheControl,
-      contentDisposition: settableMetadata.contentDisposition ?? fullMetadata?.contentDisposition,
-      contentEncoding: settableMetadata.contentEncoding ?? fullMetadata?.contentEncoding,
-      contentLanguage: settableMetadata.contentLanguage ?? fullMetadata?.contentLanguage,
-      contentType: settableMetadata.contentType ?? fullMetadata?.contentType,
-      customMetadata: settableMetadata.customMetadata ?? fullMetadata?.customMetadata
-    );
+    final nonNullMetadata = metadata.asMap()
+      ..removeWhere((key, value) => value == null);
+    _storage.storedSettableMetadataMap[_path]?.addAll(nonNullMetadata);
+    return getMetadata();
   }
 
   @override
   Future<FullMetadata> getMetadata() {
-    return Future<FullMetadata>.value(_storage.storedMetadata[_path]);
+    final metadata = _getGeneratedMetadata();
+    metadata.addAll(_storage.storedSettableMetadataMap[_path] ?? {});
+    return Future.value(FullMetadata(metadata));
+  }
+
+  Map<String, dynamic> _getGeneratedMetadata() {
+    return {
+      'bucket': bucket,
+      'fullPath': fullPath,
+      'metadataGeneration': 'metadataGeneration',
+      'md5Hash': 'md5Hash',
+      'metageneration': 'metageneration',
+      'name': name,
+      'size': _storage.storedDataMap[_path]?.lengthInBytes ??
+          _storage.storedFilesMap[_path]!.lengthSync(),
+      'creationTimeMillis': DateTime.now().millisecondsSinceEpoch,
+      'updatedTimeMillis': DateTime.now().millisecondsSinceEpoch
+    };
   }
 }
