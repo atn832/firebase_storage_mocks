@@ -18,6 +18,7 @@ class MockFirebaseStorage extends Mock implements FirebaseStorage {
     return MockReference(this, path);
   }
 
+  // Originally from https://github.com/firebase/flutterfire/blob/3dfc0997050ee4351207c355b2c22b46885f971f/packages/firebase_storage/firebase_storage/lib/src/firebase_storage.dart#L111.
   @override
   Reference refFromURL(String url) {
     assert(url.startsWith('gs://') || url.startsWith('http'),
