@@ -1,3 +1,5 @@
+// Originally from https://github.com/firebase/flutterfire/blob/master/packages/firebase_storage/firebase_storage/lib/src/utils.dart
+
 /// Returns a path from a given `gs://` URL.
 ///
 /// If no path exists, the root path will be returned.
