@@ -47,12 +47,12 @@ void main() {
       ));
 
       final metadata = await storageRef.getMetadata();
-      expect(metadata.cacheControl == 'public,max-age=300', true);
-      expect(metadata.contentType == 'image/jpeg', true);
-      expect(metadata.customMetadata!['userId'] == 'ABC123', true);
-      expect(metadata.name == storageRef.name, true);
-      expect(metadata.fullPath == storageRef.fullPath, true);
-      expect(metadata.timeCreated != null, true);
+      expect(metadata.cacheControl, equals('public,max-age=300'));
+      expect(metadata.contentType, equals('image/jpeg'));
+      expect(metadata.customMetadata!['userId'], equals('ABC123'));
+      expect(metadata.name, equals(storageRef.name));
+      expect(metadata.fullPath, equals(storageRef.fullPath));
+      expect(metadata.timeCreated, isNotNull);
 
       await storageRef.updateMetadata(SettableMetadata(
         cacheControl: 'max-age=60',
@@ -61,10 +61,10 @@ void main() {
         },
       ));
       final metadata2 = await storageRef.getMetadata();
-      expect(metadata2.cacheControl == 'max-age=60', true);
+      expect(metadata2.cacheControl, equals('max-age=60'));
 
       ///Old informations persist over updates
-      expect(metadata2.contentType == 'image/jpeg', true);
+      expect(metadata2.contentType, equals('image/jpeg'));
     });
   });
 }
