@@ -45,7 +45,7 @@ void main() {
       final downloadUrl = await storage.ref('/some/path').getDownloadURL();
       final ref = storage.refFromURL(downloadUrl);
       expect(ref, isA<Reference>());
-
+    });
     test('Set, get and update metadata', () async {
       final storage = MockFirebaseStorage();
       final storageRef = storage.ref().child(filename);
