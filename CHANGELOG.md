@@ -1,3 +1,10 @@
+## 0.5.1
+
+- Implemented `FirebaseStorage.refFromUrl`. Thank you [cedvdb](https://github.com/cedvdb)!
+- Implemented `Reference.getDownloadURL`. Thank you [cedvdb](https://github.com/cedvdb)!
+- Implemented `updateMetadata`, `getMetadata` in `Reference`. Thank you [SamuMazzi](https://github.com/SamuMazzi)!
+- Fixed usage example. Thank you [jarrodonlo](https://github.com/jarrodonlo)!
+
 ## 0.5.0
 
 - Support version 10.0.0.
