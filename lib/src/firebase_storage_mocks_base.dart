@@ -9,7 +9,7 @@ import 'package:mockito/mockito.dart';
 class MockFirebaseStorage extends Mock implements FirebaseStorage {
   final Map<String, File> storedFilesMap = {};
   final Map<String, Uint8List> storedDataMap = {};
-  final Map<String, FullMetadata> storedMetadata = {};
+  final Map<String, Map<String, dynamic>> storedSettableMetadataMap = {};
 
   @override
   Reference ref([String? path]) {
