@@ -3,9 +3,8 @@ import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
-import 'package:mockito/mockito.dart';
 
-class MockReference extends Mock implements Reference {
+class MockReference implements Reference {
   final MockFirebaseStorage _storage;
   final String _path;
   final Map<String, MockReference> children = {};
@@ -119,4 +118,7 @@ class MockReference extends Mock implements Reference {
       'updatedTimeMillis': DateTime.now().millisecondsSinceEpoch
     };
   }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }

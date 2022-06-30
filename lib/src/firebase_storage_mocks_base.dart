@@ -5,9 +5,8 @@ import 'dart:typed_data';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/src/mock_storage_reference.dart';
 import 'package:firebase_storage_mocks/src/utils.dart';
-import 'package:mockito/mockito.dart';
 
-class MockFirebaseStorage extends Mock implements FirebaseStorage {
+class MockFirebaseStorage implements FirebaseStorage {
   final Map<String, File> storedFilesMap = {};
   final Map<String, Uint8List> storedDataMap = {};
   final Map<String, Map<String, dynamic>> storedSettableMetadataMap = {};
@@ -41,9 +40,12 @@ class MockFirebaseStorage extends Mock implements FirebaseStorage {
 
   @override
   String get bucket => 'some-bucket';
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class MockUploadTask extends Mock implements UploadTask {
+class MockUploadTask implements UploadTask {
   final Future<TaskSnapshot> delegate;
   final TaskSnapshot _snapshot;
 
@@ -97,13 +99,19 @@ class MockUploadTask extends Mock implements UploadTask {
   TaskSnapshot get snapshot {
     return _snapshot;
   }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
-class MockTaskSnapshot extends Mock implements TaskSnapshot {
+class MockTaskSnapshot implements TaskSnapshot {
   final Reference reference;
 
   MockTaskSnapshot(this.reference);
 
   @override
   Reference get ref => reference;
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
