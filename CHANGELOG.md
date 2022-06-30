@@ -4,6 +4,7 @@
 - Implemented `Reference.getDownloadURL`. Thank you [cedvdb](https://github.com/cedvdb)!
 - Implemented `updateMetadata`, `getMetadata` in `Reference`. Thank you [SamuMazzi](https://github.com/SamuMazzi)!
 - Fixed usage example. Thank you [jarrodonlo](https://github.com/jarrodonlo)!
+- Migrated to sound null safety.
 
 ## 0.5.0
 
