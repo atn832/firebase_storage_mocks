@@ -35,14 +35,36 @@ class MockReference implements Reference {
 
   @override
   Future<void> delete() {
-    if (_storage.storedFilesMap.containsKey(_path)) {
-      _storage.storedFilesMap.remove(_path);
+    var key = '';
+    for (var e in _storage.storedFilesMap.entries) {
+      if (e.key.startsWith(_path)) {
+        key = e.key;
+        break;
+      }
     }
-    if (_storage.storedDataMap.containsKey(_path)) {
-      _storage.storedDataMap.remove(_path);
+    if (key != '') {
+      _storage.storedFilesMap.remove(key);
     }
-    if (_storage.storedSettableMetadataMap.containsKey(_path)) {
-      _storage.storedSettableMetadataMap.remove(_path);
+    key = '';
+    for (var e in _storage.storedDataMap.entries) {
+      if (e.key.startsWith(_path)) {
+        key = e.key;
+        break;
+      }
+    }
+    if (key != '') {
+      _storage.storedDataMap.remove(key);
+    }
+
+    key = '';
+    for (var e in _storage.storedSettableMetadataMap.entries) {
+      if (e.key.startsWith(_path)) {
+        key = e.key;
+        break;
+      }
+    }
+    if (key != '') {
+      _storage.storedSettableMetadataMap.remove(key);
     }
     return Future.value();
   }

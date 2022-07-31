@@ -96,6 +96,24 @@ void main() {
       expect(
           storage.storedSettableMetadataMap.containsKey('/$filename'), isFalse);
     });
+    test('Delete Parent', () async {
+      final storage = MockFirebaseStorage();
+      final parentRef = storage.ref().child('parent');
+      final storageRef = parentRef.child(filename);
+      final imageData = Uint8List(256);
+      final task = storageRef.putData(imageData);
+      await task;
+      expect(task.snapshot.ref.fullPath,
+          equals('gs://some-bucket/parentsomeimage.png'));
+
+      expect(storage.storedDataMap.containsKey('/parent$filename'), isTrue);
+      expect(storage.storedSettableMetadataMap.containsKey('/parent$filename'),
+          isTrue);
+      await parentRef.delete();
+      expect(storage.storedDataMap.containsKey('/parent$filename'), isFalse);
+      expect(storage.storedSettableMetadataMap.containsKey('/parent$filename'),
+          isFalse);
+    });
   });
 }
 
