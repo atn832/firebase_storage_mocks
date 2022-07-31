@@ -79,6 +79,23 @@ void main() {
       ///Old informations persist over updates
       expect(metadata2.contentType, equals('image/jpeg'));
     });
+    test('Delete File', () async {
+      final storage = MockFirebaseStorage();
+      final storageRef = storage.ref().child(filename);
+      final imageData = Uint8List(256);
+      final task = storageRef.putData(imageData);
+      await task;
+
+      expect(
+          task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
+      expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
+      expect(
+          storage.storedSettableMetadataMap.containsKey('/$filename'), isTrue);
+      await storageRef.delete();
+      expect(storage.storedDataMap.containsKey('/$filename'), isFalse);
+      expect(
+          storage.storedSettableMetadataMap.containsKey('/$filename'), isFalse);
+    });
   });
 }
 
