@@ -85,7 +85,7 @@ class MockReference implements Reference {
   }
 
   @override
-  Future<Uint8List> getData([int maxSize = 10485760]) {
+  Future<Uint8List?> getData([int maxSize = 10485760]) {
     return Future.value(_storage.storedDataMap[_path]);
   }
 
