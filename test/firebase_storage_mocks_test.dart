@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:file/memory.dart';
@@ -31,6 +32,27 @@ void main() {
       expect(
           task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
       expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
+    });
+
+    group('Gets Data', () {
+      late MockFirebaseStorage storage;
+      late Reference reference;
+      final imageData = Uint8List(256);
+      setUp(() async {
+        storage = MockFirebaseStorage();
+        reference = storage.ref().child(filename);
+        final task = reference.putData(imageData);
+        await task;
+      });
+      test('for valid reference', () async {
+        final data = await reference.getData();
+        expect(data, imageData);
+      });
+      test('for invalid reference', () async {
+        final invalidReference = reference.child("invalid");
+        final data = await invalidReference.getData();
+        expect(data, isNull);
+      });
     });
 
     test('Get download url', () async {
