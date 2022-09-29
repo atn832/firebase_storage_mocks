@@ -14,7 +14,8 @@ class MockReference implements Reference {
   @override
   Reference child(String path) {
     if (!children.containsKey(path)) {
-      children[path] = MockReference(_storage, '$_path$path');
+      final newPath = _path.endsWith('/') ? '$_path$path' : '$_path/$path';
+      children[path] = MockReference(_storage, newPath);
     }
     return children[path]!;
   }
