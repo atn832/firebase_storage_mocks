@@ -16,7 +16,8 @@ void main() {
       final task = storageRef.putFile(getFakeImageFile());
       await task;
 
-      expect(task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
+      expect(
+          task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
       expect(storage.storedFilesMap.containsKey('/$filename'), isTrue);
     });
 
@@ -27,7 +28,8 @@ void main() {
       final task = storageRef.putData(imageData);
       await task;
 
-      expect(task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
+      expect(
+          task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
       expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
     });
 
