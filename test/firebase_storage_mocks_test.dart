@@ -88,10 +88,10 @@ void main() {
       task.snapshotEvents.listen((event) async {
         expect(event.state, equals(TaskState.success));
 
-        final downloadUrl = await storage.ref('/some/path').getDownloadURL();
+        final downloadUrl = await event.ref.getDownloadURL();
 
         expect(downloadUrl.startsWith('http'), isTrue);
-        expect(downloadUrl.contains('/some/path'), isTrue);
+        expect(downloadUrl.contains('some-bucket/o/someimage.png'), isTrue);
       });
     });
   });
