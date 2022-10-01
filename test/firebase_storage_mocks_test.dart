@@ -16,8 +16,7 @@ void main() {
       final task = storageRef.putFile(getFakeImageFile());
       await task;
 
-      expect(
-          task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
+      expect(task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
       expect(storage.storedFilesMap.containsKey('/$filename'), isTrue);
     });
 
@@ -28,8 +27,7 @@ void main() {
       final task = storageRef.putData(imageData);
       await task;
 
-      expect(
-          task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
+      expect(task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
       expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
     });
 
@@ -78,6 +76,21 @@ void main() {
 
       ///Old informations persist over updates
       expect(metadata2.contentType, equals('image/jpeg'));
+    });
+
+    test('Stream upload with snapshotEvents', () async {
+      final storage = MockFirebaseStorage();
+      final storageRef = storage.ref().child(filename);
+      final task = storageRef.putFile(getFakeImageFile());
+
+      task.snapshotEvents.listen((event) async {
+        expect(event.state, equals(TaskState.success));
+
+        final downloadUrl = await storage.ref('/some/path').getDownloadURL();
+
+        expect(downloadUrl.startsWith('http'), isTrue);
+        expect(downloadUrl.contains('/some/path'), isTrue);
+      });
     });
   });
 }
