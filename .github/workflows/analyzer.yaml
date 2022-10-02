@@ -1,5 +1,5 @@
 name: analyzer
-on: [push]
+on: [push, pull_request]
 jobs:
   run-analyzer:
     runs-on: ubuntu-latest
