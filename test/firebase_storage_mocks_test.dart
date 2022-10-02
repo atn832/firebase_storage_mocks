@@ -79,6 +79,21 @@ void main() {
       ///Old informations persist over updates
       expect(metadata2.contentType, equals('image/jpeg'));
     });
+
+    test('Stream upload with snapshotEvents', () async {
+      final storage = MockFirebaseStorage();
+      final storageRef = storage.ref().child(filename);
+      final task = storageRef.putFile(getFakeImageFile());
+
+      task.snapshotEvents.listen((event) async {
+        expect(event.state, equals(TaskState.success));
+
+        final downloadUrl = await event.ref.getDownloadURL();
+
+        expect(downloadUrl.startsWith('http'), isTrue);
+        expect(downloadUrl.contains('some-bucket/o/someimage.png'), isTrue);
+      });
+    });
   });
 }
 

@@ -101,6 +101,11 @@ class MockUploadTask implements UploadTask {
   }
 
   @override
+  Stream<TaskSnapshot> get snapshotEvents {
+    return delegate.asStream();
+  }
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
@@ -111,6 +116,9 @@ class MockTaskSnapshot implements TaskSnapshot {
 
   @override
   Reference get ref => reference;
+
+  @override
+  TaskState get state => TaskState.success;
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
