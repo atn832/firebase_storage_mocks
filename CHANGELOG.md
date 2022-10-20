@@ -1,3 +1,7 @@
+## 0.6.0
+
+- Support version 11.0.0.
+
 ## 0.5.1
 
 - Implemented `FirebaseStorage.refFromUrl`. Thank you [cedvdb](https://github.com/cedvdb)!
