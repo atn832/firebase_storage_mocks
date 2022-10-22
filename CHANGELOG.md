@@ -1,6 +1,11 @@
+## 0.6.0+1
+
+- Updated docs.
+
 ## 0.6.0
 
 - Support version 11.0.0.
+- Implemented `state` and `snapshotEvents` in `UploadTask`. Thank you [KalervoHyyppa](https://github.com/KalervoHyyppa)!
 
 ## 0.5.1
 

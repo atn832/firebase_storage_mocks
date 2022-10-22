@@ -1,4 +1,8 @@
+# Firebase Storage Mocks
+
 Mocks for [Firebase Storage](https://pub.dev/packages/firebase_storage). Use this package to write unit tests involving Firebase Storage.
+
+[![pub package](https://img.shields.io/pub/v/firebase_storage_mocks.svg)](https://pub.dartlang.org/packages/firebase_storage_mocks)
 
 ## Usage
 
@@ -17,6 +21,13 @@ main() async {
   print(task.ref.fullPath);
 }
 ```
+
+## Compatibility table
+
+| firebase_storage | firebase_storage_mocks |
+|------------------|------------------------|
+| 11.0.0           | 0.6.0                  |
+| 10.0.0           | 0.5.1                  |
 
 ## Features and bugs
 
