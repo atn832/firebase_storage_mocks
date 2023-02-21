@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
+import 'package:firebase_storage_mocks/src/mock_list_result.dart';
 
 class MockReference implements Reference {
   final MockFirebaseStorage _storage;
@@ -87,6 +88,33 @@ class MockReference implements Reference {
   @override
   Future<Uint8List?> getData([int maxSize = 10485760]) {
     return Future.value(_storage.storedDataMap[_path]);
+  }
+
+  @override
+  Future<ListResult> listAll() {
+    final normalizedPath = _path.endsWith('/') ? _path : _path + '/';
+    final prefixes = <String>[], items = <String>[];
+    final allPaths = <String>[
+      ..._storage.storedDataMap.keys,
+      ..._storage.storedFilesMap.keys
+    ];
+    for (var child in allPaths) {
+      if (!child.startsWith(normalizedPath)) continue;
+      final relativeChild = child.substring(normalizedPath.length);
+      if (relativeChild.contains('/')) {
+        var prefix = normalizedPath + relativeChild.split('/')[0];
+        if (!prefixes.contains(prefix)) prefixes.add(prefix);
+      } else {
+        items.add(child);
+      }
+    }
+    prefixes.sort();
+    items.sort();
+    return Future.value(MockListResult(
+        items: items.map((item) => MockReference(_storage, item)).toList(),
+        prefixes:
+            prefixes.map((prefix) => MockReference(_storage, prefix)).toList(),
+        storage: _storage));
   }
 
   @override

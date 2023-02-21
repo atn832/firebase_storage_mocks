@@ -1,12 +1,15 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:file/memory.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
+import 'package:firebase_storage_mocks/src/mock_storage_reference.dart';
 import 'package:test/test.dart';
 
 final filename = 'someimage.png';
+final random = Random.secure();
 
 void main() {
   group('MockFirebaseStorage Tests', () {
@@ -24,7 +27,7 @@ void main() {
     test('Puts Data', () async {
       final storage = MockFirebaseStorage();
       final storageRef = storage.ref().child(filename);
-      final imageData = Uint8List(256);
+      final imageData = randomData(256);
       final task = storageRef.putData(imageData);
       await task;
 
@@ -36,7 +39,7 @@ void main() {
     group('Gets Data', () {
       late MockFirebaseStorage storage;
       late Reference reference;
-      final imageData = Uint8List(256);
+      final imageData = randomData(256);
       setUp(() async {
         storage = MockFirebaseStorage();
         reference = storage.ref().child(filename);
@@ -115,7 +118,44 @@ void main() {
         expect(downloadUrl.contains('some-bucket/o/someimage.png'), isTrue);
       });
     });
+
+    test('Ref listAll', () async {
+      final basePath = 'this/is/basic';
+      final otherPath = 'another/path';
+      final storage = MockFirebaseStorage();
+      await storage.ref(basePath + '/data2').putData(randomData(255));
+      await storage.ref(basePath + '/subdir1/data1').putData(randomData(255));
+      await storage.ref(basePath + '/data2').putData(randomData(255));
+      await storage.ref(otherPath + '/data3').putData(randomData(255));
+      await storage.ref(basePath + '/file3').putFile(getFakeImageFile());
+      await storage.ref(basePath + '/data3').putData(randomData(255));
+      await storage
+          .ref(basePath + '/subdir2/file2')
+          .putFile(getFakeImageFile());
+      await storage
+          .ref(basePath + '/subdir1/file1')
+          .putFile(getFakeImageFile());
+
+      final listResult = await storage.ref(basePath).listAll();
+      expect(listResult.prefixes.length, 2);
+      expectRef(listResult.prefixes[0], name: 'subdir1');
+      expectRef(listResult.prefixes[1], name: 'subdir2');
+      expect(listResult.items.length, 3);
+      expectRef(listResult.items[0], name: 'data2');
+      expectRef(listResult.items[1], name: 'data3');
+      expectRef(listResult.items[2], name: 'file3');
+    });
   });
+}
+
+void expectRef(Reference actualReference, {required String name}) {
+  expect(actualReference,
+      isA<MockReference>().having((ref) => ref.name, 'Right name', name));
+}
+
+Uint8List randomData(int n) {
+  final elements = List.generate(n, (index) => random.nextInt(255));
+  return Uint8List.fromList(elements);
 }
 
 File getFakeImageFile() {
