@@ -1,3 +1,8 @@
+## 0.6.1
+
+- implemented `Reference.putString`. Thank you [WahdanZ](https://github.com/atn832/firebase_storage_mocks/pull/31)!
+- implemented `Reference.listAll`. Thank you [saroad2](https://github.com/atn832/firebase_storage_mocks/pull/33)!
+
 ## 0.6.0+1
 
 - Updated docs.
