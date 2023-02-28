@@ -1,12 +1,15 @@
 import 'dart:io';
+import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:file/memory.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/firebase_storage_mocks.dart';
+import 'package:firebase_storage_mocks/src/mock_storage_reference.dart';
 import 'package:test/test.dart';
 
 final filename = 'someimage.png';
+final random = Random.secure();
 
 void main() {
   group('MockFirebaseStorage Tests', () {
@@ -24,7 +27,7 @@ void main() {
     test('Puts Data', () async {
       final storage = MockFirebaseStorage();
       final storageRef = storage.ref().child(filename);
-      final imageData = Uint8List(256);
+      final imageData = randomData(256);
       final task = storageRef.putData(imageData);
       await task;
 
@@ -47,7 +50,7 @@ void main() {
     group('Gets Data', () {
       late MockFirebaseStorage storage;
       late Reference reference;
-      final imageData = Uint8List(256);
+      final imageData = randomData(256);
       setUp(() async {
         storage = MockFirebaseStorage();
         reference = storage.ref().child(filename);
@@ -126,7 +129,56 @@ void main() {
         expect(downloadUrl.contains('some-bucket/o/someimage.png'), isTrue);
       });
     });
+
+    test('Ref listAll', () async {
+      final basePath = 'this/is/basic';
+      final otherPath = 'another/path';
+      final storage = MockFirebaseStorage();
+      await storage.ref(basePath + '/listed_data').putData(randomData(255));
+      await storage
+          .ref(basePath + '/subdir2/too_deep_too')
+          .putFile(getFakeImageFile());
+      await storage
+          .ref(basePath + '/subdir1/too_deep')
+          .putData(randomData(255));
+      await storage
+          .ref(basePath + '/another_listed_data')
+          .putData(randomData(255));
+      await storage
+          .ref(otherPath + '/i_will_not_be_listed!')
+          .putData(randomData(255));
+      await storage.ref(basePath + '/file_listed').putFile(getFakeImageFile());
+      await storage
+          .ref(basePath + '/yet_another_listed')
+          .putData(randomData(255));
+      await storage
+          .ref(basePath + '/subdir1/deep_in_same_subdir')
+          .putFile(getFakeImageFile());
+      await storage.ref(basePath + '/string_listed').putString('dummy string!');
+
+      final listResult = await storage.ref(basePath).listAll();
+      expect(listResult.prefixes.length, 2);
+      // Results are ordered alphabetically
+      expectRef(listResult.prefixes[0], name: 'subdir1');
+      expectRef(listResult.prefixes[1], name: 'subdir2');
+      expect(listResult.items.length, 5);
+      expectRef(listResult.items[0], name: 'another_listed_data');
+      expectRef(listResult.items[1], name: 'file_listed');
+      expectRef(listResult.items[2], name: 'listed_data');
+      expectRef(listResult.items[3], name: 'string_listed');
+      expectRef(listResult.items[4], name: 'yet_another_listed');
+    });
   });
+}
+
+void expectRef(Reference actualReference, {required String name}) {
+  expect(actualReference,
+      isA<MockReference>().having((ref) => ref.name, 'Right name', name));
+}
+
+Uint8List randomData(int n) {
+  final elements = List.generate(n, (index) => random.nextInt(255));
+  return Uint8List.fromList(elements);
 }
 
 File getFakeImageFile() {
