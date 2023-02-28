@@ -114,7 +114,7 @@ class MockReference implements Reference {
       if (!child.startsWith(normalizedPath)) continue;
       final relativeChild = child.substring(normalizedPath.length);
       if (relativeChild.contains('/')) {
-        var prefix = normalizedPath + relativeChild.split('/')[0];
+        final prefix = normalizedPath + relativeChild.split('/')[0];
         if (!prefixes.contains(prefix)) prefixes.add(prefix);
       } else {
         items.add(child);
