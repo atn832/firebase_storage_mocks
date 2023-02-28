@@ -32,7 +32,18 @@ void main() {
           task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
       expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
     });
+    // test for putString
+    test('Puts String', () async {
+      final storage = MockFirebaseStorage();
+      final storageRef = storage.ref().child(filename);
+      final task = storageRef.putString('some string');
+      await task;
 
+      expect(
+          task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
+      expect(storage.storedStringMap.containsKey('/$filename'), isTrue);
+      expect(storage.storedStringMap['/$filename'], equals('some string'));
+    });
     group('Gets Data', () {
       late MockFirebaseStorage storage;
       late Reference reference;

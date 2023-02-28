@@ -34,6 +34,17 @@ class MockReference implements Reference {
   }
 
   @override
+  UploadTask putString(
+    String data, {
+    PutStringFormat format = PutStringFormat.raw,
+    SettableMetadata? metadata,
+  }) {
+    _storage.storedStringMap[_path] = data;
+    _storage.storedSettableMetadataMap[_path] = metadata?.asMap() ?? {};
+    return MockUploadTask(this);
+  }
+
+  @override
   Future<void> delete() {
     if (_storage.storedFilesMap.containsKey(_path)) {
       _storage.storedFilesMap.remove(_path);
