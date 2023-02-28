@@ -134,27 +134,39 @@ void main() {
       final basePath = 'this/is/basic';
       final otherPath = 'another/path';
       final storage = MockFirebaseStorage();
-      await storage.ref(basePath + '/data2').putData(randomData(255));
-      await storage.ref(basePath + '/subdir1/data1').putData(randomData(255));
-      await storage.ref(basePath + '/data2').putData(randomData(255));
-      await storage.ref(otherPath + '/data3').putData(randomData(255));
-      await storage.ref(basePath + '/file3').putFile(getFakeImageFile());
-      await storage.ref(basePath + '/data3').putData(randomData(255));
+      await storage.ref(basePath + '/listed_data').putData(randomData(255));
       await storage
-          .ref(basePath + '/subdir2/file2')
+          .ref(basePath + '/subdir2/too_deep_too')
           .putFile(getFakeImageFile());
       await storage
-          .ref(basePath + '/subdir1/file1')
+          .ref(basePath + '/subdir1/too_deep')
+          .putData(randomData(255));
+      await storage
+          .ref(basePath + '/another_listed_data')
+          .putData(randomData(255));
+      await storage
+          .ref(otherPath + '/i_will_not_be_listed!')
+          .putData(randomData(255));
+      await storage.ref(basePath + '/file_listed').putFile(getFakeImageFile());
+      await storage
+          .ref(basePath + '/yet_another_listed')
+          .putData(randomData(255));
+      await storage
+          .ref(basePath + '/subdir1/deep_in_same_subdir')
           .putFile(getFakeImageFile());
+      await storage.ref(basePath + '/string_listed').putString('dummy string!');
 
       final listResult = await storage.ref(basePath).listAll();
       expect(listResult.prefixes.length, 2);
+      // Results are ordered alphabetically
       expectRef(listResult.prefixes[0], name: 'subdir1');
       expectRef(listResult.prefixes[1], name: 'subdir2');
-      expect(listResult.items.length, 3);
-      expectRef(listResult.items[0], name: 'data2');
-      expectRef(listResult.items[1], name: 'data3');
-      expectRef(listResult.items[2], name: 'file3');
+      expect(listResult.items.length, 5);
+      expectRef(listResult.items[0], name: 'another_listed_data');
+      expectRef(listResult.items[1], name: 'file_listed');
+      expectRef(listResult.items[2], name: 'listed_data');
+      expectRef(listResult.items[3], name: 'string_listed');
+      expectRef(listResult.items[4], name: 'yet_another_listed');
     });
   });
 }

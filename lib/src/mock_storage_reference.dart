@@ -107,7 +107,8 @@ class MockReference implements Reference {
     final prefixes = <String>[], items = <String>[];
     final allPaths = <String>[
       ..._storage.storedDataMap.keys,
-      ..._storage.storedFilesMap.keys
+      ..._storage.storedFilesMap.keys,
+      ..._storage.storedStringMap.keys
     ];
     for (var child in allPaths) {
       if (!child.startsWith(normalizedPath)) continue;
