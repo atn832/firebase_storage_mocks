@@ -9,6 +9,7 @@ import 'package:firebase_storage_mocks/src/utils.dart';
 class MockFirebaseStorage implements FirebaseStorage {
   final Map<String, File> storedFilesMap = {};
   final Map<String, Uint8List> storedDataMap = {};
+  final Map<String, String> storedStringMap = {};
   final Map<String, Map<String, dynamic>> storedSettableMetadataMap = {};
 
   @override
