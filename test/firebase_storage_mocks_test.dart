@@ -62,7 +62,7 @@ void main() {
         expect(data, imageData);
       });
       test('for invalid reference', () async {
-        final invalidReference = reference.child("invalid");
+        final invalidReference = reference.child('invalid');
         final data = await invalidReference.getData();
         expect(data, isNull);
       });
