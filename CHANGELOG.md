@@ -1,3 +1,7 @@
+## 0.7.0
+
+Migrated to firebase_storage 12.0.0. Thank you [ben-milanko](https://github.com/ben-milanko)! [PR-35](https://github.com/atn832/firebase_storage_mocks/pull/35)
+
 ## 0.6.1
 
 - implemented `Reference.putString`. Thank you [WahdanZ](https://github.com/atn832/firebase_storage_mocks/pull/31)!
