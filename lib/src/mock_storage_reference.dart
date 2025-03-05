@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -22,7 +23,7 @@ class MockReference implements Reference {
 
   @override
   UploadTask putFile(File file, [SettableMetadata? metadata]) {
-    _storage.storedFilesMap[_path] = file;
+    _storage.storedDataMap[_path] = file;
     _storage.storedSettableMetadataMap[_path] = metadata?.asMap() ?? {};
     return MockUploadTask(this);
   }
@@ -40,15 +41,15 @@ class MockReference implements Reference {
     PutStringFormat format = PutStringFormat.raw,
     SettableMetadata? metadata,
   }) {
-    _storage.storedStringMap[_path] = data;
+    _storage.storedDataMap[_path] = data;
     _storage.storedSettableMetadataMap[_path] = metadata?.asMap() ?? {};
     return MockUploadTask(this);
   }
 
   @override
   Future<void> delete() {
-    if (_storage.storedFilesMap.containsKey(_path)) {
-      _storage.storedFilesMap.remove(_path);
+    if (_storage.storedDataMap.containsKey(_path)) {
+      _storage.storedDataMap.remove(_path);
     }
     if (_storage.storedDataMap.containsKey(_path)) {
       _storage.storedDataMap.remove(_path);
@@ -98,19 +99,25 @@ class MockReference implements Reference {
 
   @override
   Future<Uint8List?> getData([int maxSize = 10485760]) {
-    return Future.value(_storage.storedDataMap[_path]);
+    final value = _storage.storedDataMap[_path];
+    Uint8List? data;
+    if (value is Uint8List) {
+      data = value;
+    } else if (value is File) {
+      data = value.readAsBytesSync();
+    } else if (value is String) {
+      data = Uint8List.fromList(utf8.encode(value));
+    }
+
+    return Future.value(data);
   }
 
   @override
   Future<ListResult> listAll() {
     final normalizedPath = _path.endsWith('/') ? _path : _path + '/';
     final prefixes = <String>[], items = <String>[];
-    final allPaths = <String>[
-      ..._storage.storedDataMap.keys,
-      ..._storage.storedFilesMap.keys,
-      ..._storage.storedStringMap.keys
-    ];
-    for (var child in allPaths) {
+
+    for (var child in _storage.storedDataMap.keys) {
       if (!child.startsWith(normalizedPath)) continue;
       final relativeChild = child.substring(normalizedPath.length);
       if (relativeChild.contains('/')) {
@@ -152,8 +159,20 @@ class MockReference implements Reference {
       'md5Hash': 'md5Hash',
       'metageneration': 'metageneration',
       'name': name,
-      'size': _storage.storedDataMap[_path]?.lengthInBytes ??
-          _storage.storedFilesMap[_path]!.lengthSync(),
+      'size': _storage.storedDataMap.values.fold<int>(0, (previousValue, element) {
+        final int size;
+        if (element is File) {
+          size = element.lengthSync();
+        } else if (element is String) {
+          size = element.length;
+        } else if (element is Uint8List) {
+          size = element.length;
+        } else {
+          size = 0;
+        }
+
+        return previousValue + size;
+      }),
       'creationTimeMillis': DateTime.now().millisecondsSinceEpoch,
       'updatedTimeMillis': DateTime.now().millisecondsSinceEpoch
     };

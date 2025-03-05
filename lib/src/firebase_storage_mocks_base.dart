@@ -1,15 +1,11 @@
 import 'dart:async';
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/src/mock_storage_reference.dart';
 import 'package:firebase_storage_mocks/src/utils.dart';
 
 class MockFirebaseStorage implements FirebaseStorage {
-  final Map<String, File> storedFilesMap = {};
-  final Map<String, Uint8List> storedDataMap = {};
-  final Map<String, String> storedStringMap = {};
+  final Map<String, dynamic> storedDataMap = {};
   final Map<String, Map<String, dynamic>> storedSettableMetadataMap = {};
 
   @override
