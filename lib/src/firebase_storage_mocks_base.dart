@@ -5,7 +5,7 @@ import 'package:firebase_storage_mocks/src/mock_storage_reference.dart';
 import 'package:firebase_storage_mocks/src/utils.dart';
 
 class MockFirebaseStorage implements FirebaseStorage {
-  final Map<String, dynamic> storedDataMap = {};
+  final storedDataMap = _StoredDataMap();
   final Map<String, Map<String, dynamic>> storedSettableMetadataMap = {};
 
   @override
@@ -119,4 +119,32 @@ class MockTaskSnapshot implements TaskSnapshot {
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _StoredDataMap {
+  final _data = <String, dynamic>{};
+
+  dynamic get(String key) {
+    return _data[_normalizeKey(key)];
+  }
+
+  void put(String key, dynamic value) => _data[_normalizeKey(key)] = value;
+
+  dynamic remove(String key) {
+    _data.remove(_normalizeKey(key));
+  }
+
+  Iterable<String> get keys => _data.keys;
+
+  Iterable<dynamic> get values => _data.values;
+
+  bool containsKey(String key) => _data.containsKey(_normalizeKey(key));
+
+  String _normalizeKey(String key) {
+    if (key.startsWith('/')) {
+      return key.substring(1, key.length);
+    } else {
+      return key;
+    }
+  }
 }

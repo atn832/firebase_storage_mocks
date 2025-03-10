@@ -23,14 +23,14 @@ class MockReference implements Reference {
 
   @override
   UploadTask putFile(File file, [SettableMetadata? metadata]) {
-    _storage.storedDataMap[_path] = file;
+    _storage.storedDataMap.put(_path, file);
     _storage.storedSettableMetadataMap[_path] = metadata?.asMap() ?? {};
     return MockUploadTask(this);
   }
 
   @override
   UploadTask putData(Uint8List data, [SettableMetadata? metadata]) {
-    _storage.storedDataMap[_path] = data;
+    _storage.storedDataMap.put(_path, data);
     _storage.storedSettableMetadataMap[_path] = metadata?.asMap() ?? {};
     return MockUploadTask(this);
   }
@@ -41,7 +41,7 @@ class MockReference implements Reference {
     PutStringFormat format = PutStringFormat.raw,
     SettableMetadata? metadata,
   }) {
-    _storage.storedDataMap[_path] = data;
+    _storage.storedDataMap.put(_path, data);
     _storage.storedSettableMetadataMap[_path] = metadata?.asMap() ?? {};
     return MockUploadTask(this);
   }
@@ -99,7 +99,7 @@ class MockReference implements Reference {
 
   @override
   Future<Uint8List?> getData([int maxSize = 10485760]) {
-    final value = _storage.storedDataMap[_path];
+    final value = _storage.storedDataMap.get(_path);
     Uint8List? data;
     if (value is Uint8List) {
       data = value;

@@ -45,7 +45,7 @@ void main() {
       expect(
           task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
       expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
-      expect(storage.storedDataMap['/$filename'], equals('some string'));
+      expect(storage.storedDataMap.get('/$filename'), equals('some string'));
     });
     group('Gets Data', () {
       late MockFirebaseStorage storage;
@@ -100,6 +100,22 @@ void main() {
       final downloadUrl = await storage.ref('/some/path').getDownloadURL();
       final ref = storage.refFromURL(downloadUrl);
       expect(ref, isA<Reference>());
+    });
+    test('Data from url', () async {
+      final storage = MockFirebaseStorage();
+      final ref = storage.ref('/some/path');
+      await ref.putString('test');
+      final url = await ref.getDownloadURL();
+      final urlRef = storage.refFromURL(url);
+      final urlData = await urlRef.getData();
+
+      expect(urlData, isNotNull);
+    });
+    test('Get data for paths which start with or without /', () async {
+      final storage = MockFirebaseStorage();
+      await storage.ref('/some/path').putString('test');
+      final data = storage.ref('some/path').getData();
+      expect(data, isNotNull);
     });
     test('Set, get and update metadata', () async {
       final storage = MockFirebaseStorage();
