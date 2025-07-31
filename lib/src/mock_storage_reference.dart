@@ -94,9 +94,7 @@ class MockReference implements Reference {
   Future<String> getDownloadURL() {
     final path = _path.startsWith('/') ? _path : '/$_path';
 
-    if (_storage.storedFilesMap.containsKey(_path) ||
-        _storage.storedDataMap.containsKey(_path) ||
-        _storage.storedSettableMetadataMap.containsKey(_path)) {
+    if (_storage.storedDataMap.containsKey(_path)) {
       return Future.value(
           'https://firebasestorage.googleapis.com/v0/b/$bucket/o$path');
     } else {
