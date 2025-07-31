@@ -7,9 +7,7 @@ import 'package:firebase_storage_mocks/src/mock_storage_reference.dart';
 import 'package:firebase_storage_mocks/src/utils.dart';
 
 class MockFirebaseStorage implements FirebaseStorage {
-  final Map<String, File> storedFilesMap = {};
-  final Map<String, Uint8List> storedDataMap = {};
-  final Map<String, String> storedStringMap = {};
+  final storedDataMap = _StoredDataMap();
   final Map<String, Map<String, dynamic>> storedSettableMetadataMap = {};
 
   @override
@@ -123,4 +121,45 @@ class MockTaskSnapshot implements TaskSnapshot {
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+class _StoredDataMap {
+  final _data = <String, dynamic>{};
+
+  dynamic get(String key) {
+    return _data[_normalizeKey(key)];
+  }
+
+  int getSize(String key) {
+    final element = _data[key];
+    if (element is File) {
+      return element.lengthSync();
+    } else if (element is String) {
+      return element.length;
+    } else if (element is Uint8List) {
+      return element.length;
+    } else {
+      return 0;
+    }
+  }
+
+  void put(String key, dynamic value) => _data[_normalizeKey(key)] = value;
+
+  dynamic remove(String key) {
+    _data.remove(_normalizeKey(key));
+  }
+
+  Iterable<String> get keys => _data.keys;
+
+  Iterable<dynamic> get values => _data.values;
+
+  bool containsKey(String key) => _data.containsKey(_normalizeKey(key));
+
+  String _normalizeKey(String key) {
+    if (key.startsWith('/')) {
+      return key.substring(1, key.length);
+    } else {
+      return key;
+    }
+  }
 }
