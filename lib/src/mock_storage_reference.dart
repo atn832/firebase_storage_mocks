@@ -167,20 +167,7 @@ class MockReference implements Reference {
       'md5Hash': 'md5Hash',
       'metageneration': 'metageneration',
       'name': name,
-      'size': _storage.storedDataMap.values.fold<int>(0, (previousValue, element) {
-        final int size;
-        if (element is File) {
-          size = element.lengthSync();
-        } else if (element is String) {
-          size = element.length;
-        } else if (element is Uint8List) {
-          size = element.length;
-        } else {
-          size = 0;
-        }
-
-        return previousValue + size;
-      }),
+      'size': _storage.storedDataMap.getSize(_path),
       'creationTimeMillis': DateTime.now().millisecondsSinceEpoch,
       'updatedTimeMillis': DateTime.now().millisecondsSinceEpoch
     };

@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:firebase_storage_mocks/src/mock_storage_reference.dart';
@@ -126,6 +128,19 @@ class _StoredDataMap {
 
   dynamic get(String key) {
     return _data[_normalizeKey(key)];
+  }
+
+  int getSize(String key) {
+    final element = _data[key];
+    if (element is File) {
+      return element.lengthSync();
+    } else if (element is String) {
+      return element.length;
+    } else if (element is Uint8List) {
+      return element.length;
+    } else {
+      return 0;
+    }
   }
 
   void put(String key, dynamic value) => _data[_normalizeKey(key)] = value;
