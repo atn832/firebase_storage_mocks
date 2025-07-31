@@ -93,8 +93,18 @@ class MockReference implements Reference {
   @override
   Future<String> getDownloadURL() {
     final path = _path.startsWith('/') ? _path : '/$_path';
-    return Future.value(
-        'https://firebasestorage.googleapis.com/v0/b/$bucket/o$path');
+
+    if (_storage.storedFilesMap.containsKey(_path) ||
+        _storage.storedDataMap.containsKey(_path) ||
+        _storage.storedSettableMetadataMap.containsKey(_path)) {
+      return Future.value(
+          'https://firebasestorage.googleapis.com/v0/b/$bucket/o$path');
+    } else {
+      throw FirebaseException(
+          plugin: 'firebase_storage',
+          message: 'No object exists at the desired reference.',
+          code: 'object-not-found');
+    }
   }
 
   @override
