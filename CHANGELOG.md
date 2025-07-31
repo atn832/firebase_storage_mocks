@@ -1,11 +1,16 @@
+## 0.8.0
+
+- Upgraded dependency to firebase_storage 12.0.0. [PR-44](https://github.com/atn832/firebase_storage_mocks/pull/44). Thank you [jt274](https://github.com/jt274)!
+- Fixed `getData` after calling `putFile`. [PR-43](https://github.com/atn832/firebase_storage_mocks/pull/43). Thank you [zamesilyasa](https://github.com/zamesilyasa)!
+
 ## 0.7.0
 
 Migrated to firebase_storage 12.0.0. Thank you [ben-milanko](https://github.com/ben-milanko)! [PR-35](https://github.com/atn832/firebase_storage_mocks/pull/35)
 
 ## 0.6.1
 
-- implemented `Reference.putString`. Thank you [WahdanZ](https://github.com/atn832/firebase_storage_mocks/pull/31)!
-- implemented `Reference.listAll`. Thank you [saroad2](https://github.com/atn832/firebase_storage_mocks/pull/33)!
+- Implemented `Reference.putString`. Thank you [WahdanZ](https://github.com/atn832/firebase_storage_mocks/pull/31)!
+- Implemented `Reference.listAll`. Thank you [saroad2](https://github.com/atn832/firebase_storage_mocks/pull/33)!
 
 ## 0.6.0+1
 
