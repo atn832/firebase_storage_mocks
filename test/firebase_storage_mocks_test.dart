@@ -70,17 +70,42 @@ void main() {
 
     test('Get download url', () async {
       final storage = MockFirebaseStorage();
-      final downloadUrl = await storage.ref('/some/path').getDownloadURL();
+      final storageRef = storage.ref('/some/path').child(filename);
+      final task = storageRef.putFile(getFakeImageFile());
+      await task;
+      final downloadUrl = await storageRef.getDownloadURL();
       expect(downloadUrl.startsWith('http'), isTrue);
       expect(downloadUrl.contains('/some/path'), isTrue);
     });
 
     test('Ref from url', () async {
       final storage = MockFirebaseStorage();
-      final downloadUrl = await storage.ref('/some/path').getDownloadURL();
+      final storageRef = storage.ref('/some/path').child(filename);
+      final task = storageRef.putFile(getFakeImageFile());
+      await task;
+      final downloadUrl = await storageRef.getDownloadURL();
       final ref = storage.refFromURL(downloadUrl);
       expect(ref, isA<Reference>());
     });
+
+    test(
+      'Delete File',
+      () async {
+        final storage = MockFirebaseStorage();
+        final storageRef = storage.ref().child(filename);
+        final task = storageRef.putFile(getFakeImageFile());
+        await task;
+        final url = await storageRef.getDownloadURL();
+        await storageRef.delete();
+
+        final resultCall = storage.refFromURL(url).getDownloadURL;
+
+        expect(
+          () async => await resultCall(),
+          throwsA(isA<FirebaseException>()),
+        );
+      },
+    );
     test('Set, get and update metadata', () async {
       final storage = MockFirebaseStorage();
       final storageRef = storage.ref().child(filename);
