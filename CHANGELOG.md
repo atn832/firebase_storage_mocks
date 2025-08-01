@@ -1,7 +1,8 @@
-## 0.8.0
+## 0.8.0+1
 
 - Upgraded dependency to firebase_storage 12.0.0. [PR-44](https://github.com/atn832/firebase_storage_mocks/pull/44). Thank you [jt274](https://github.com/jt274)!
 - Fixed `getData` after calling `putFile`. [PR-43](https://github.com/atn832/firebase_storage_mocks/pull/43). Thank you [zamesilyasa](https://github.com/zamesilyasa)!
+- `Reference.getDownloadURL` throws an exception if the data does not exist. [PR-40](https://github.com/atn832/firebase_storage_mocks/pull/40). Thank you [faheem4797](https://github.com/faheem4797)!
 
 ## 0.7.0
 
