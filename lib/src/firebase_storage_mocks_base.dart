@@ -131,7 +131,7 @@ class _StoredDataMap {
   }
 
   int getSize(String key) {
-    final element = _data[key];
+    final element = _data[_normalizeKey(key)];
     if (element is File) {
       return element.lengthSync();
     } else if (element is String) {
