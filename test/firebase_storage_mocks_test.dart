@@ -107,7 +107,7 @@ void main() {
       final ref = storage.refFromURL(downloadUrl);
       expect(ref, isA<Reference>());
     });
-    
+
     test('Data from url', () async {
       final storage = MockFirebaseStorage();
       final ref = storage.ref('/some/path');
@@ -118,7 +118,7 @@ void main() {
 
       expect(urlData, isNotNull);
     });
-    
+
     test('Get data for paths which start with or without /', () async {
       final storage = MockFirebaseStorage();
       await storage.ref('/some/path').putString('test');
@@ -177,6 +177,28 @@ void main() {
 
       ///Old informations persist over updates
       expect(metadata2.contentType, equals('image/jpeg'));
+    });
+
+    test('Metadata size', () async {
+      final storage = MockFirebaseStorage();
+      final storageRef = storage.ref().child(filename);
+      await storageRef.putFile(getFakeImageFile());
+
+      final metadata = await storageRef.getMetadata();
+      expect(metadata.size, fakeImageFileContent.length);
+    });
+
+    test('Metadata size returns only the queried data size', () async {
+      final storage = MockFirebaseStorage();
+      final storageRef = storage.ref().child(filename);
+      await storageRef.putFile(getFakeImageFile());
+
+      // Store a second file.
+      await storage.ref().child(filename + '2').putFile(getFakeImageFile());
+
+      // storageRef's size should only be the size of the first file.
+      final metadata = await storageRef.getMetadata();
+      expect(metadata.size, fakeImageFileContent.length);
     });
 
     test('Stream upload with snapshotEvents', () async {
@@ -245,9 +267,11 @@ Uint8List randomData(int n) {
   return Uint8List.fromList(elements);
 }
 
+const fakeImageFileContent = 'contents';
+
 File getFakeImageFile() {
   var fs = MemoryFileSystem();
   final image = fs.file(filename);
-  image.writeAsStringSync('contents');
+  image.writeAsStringSync(fakeImageFileContent);
   return image;
 }
