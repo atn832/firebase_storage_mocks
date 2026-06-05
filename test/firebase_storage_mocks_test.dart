@@ -20,7 +20,7 @@ void main() {
       await task;
 
       expect(
-          task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
+          task.snapshot.ref.fullPath, equals('someimage.png'));
       expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
     });
 
@@ -32,7 +32,7 @@ void main() {
       await task;
 
       expect(
-          task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
+          task.snapshot.ref.fullPath, equals('someimage.png'));
       expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
     });
     // test for putString
@@ -43,9 +43,29 @@ void main() {
       await task;
 
       expect(
-          task.snapshot.ref.fullPath, equals('gs://some-bucket/someimage.png'));
+          task.snapshot.ref.fullPath, equals('someimage.png'));
       expect(storage.storedDataMap.containsKey('/$filename'), isTrue);
       expect(storage.storedDataMap.get('/$filename'), equals('some string'));
+    });
+    group('fullPath returns the bucket-relative slash-path', () {
+      // Real Firebase Storage's `Reference.fullPath` is the path relative to
+      // the bucket root with no `gs://{bucket}` prefix and no leading slash.
+      // These tests pin that contract so the mock stays faithful to it.
+      test('for a top-level child', () {
+        final storage = MockFirebaseStorage();
+        final ref = storage.ref().child(filename);
+        expect(ref.fullPath, equals('someimage.png'));
+      });
+      test('for a nested path', () {
+        final storage = MockFirebaseStorage();
+        final ref = storage.ref('/images').child('/$filename');
+        expect(ref.fullPath, equals('images/someimage.png'));
+      });
+      test('has no gs:// prefix', () {
+        final storage = MockFirebaseStorage();
+        final ref = storage.ref().child(filename);
+        expect(ref.fullPath.startsWith('gs://'), isFalse);
+      });
     });
     group('Gets Data', () {
       late MockFirebaseStorage storage;
