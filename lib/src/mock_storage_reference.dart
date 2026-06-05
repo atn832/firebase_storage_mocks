@@ -71,7 +71,7 @@ class MockReference implements Reference {
     // (e.g. `images/someimage.png`), NOT a `gs://{bucket}` URI. The leading
     // slash is also stripped to match real `Reference.fullPath`, where the
     // root reference's `fullPath` is the empty string. See
-    // https://firebase.google.com/docs/reference/js/storage.reference.md#referencefullpath
+    // https://firebase.google.com/docs/reference/js/storage.storagereference.md#storagereferencefullpath
     return _path.startsWith('/') ? _path.substring(1) : _path;
   }
 

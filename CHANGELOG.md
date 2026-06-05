@@ -1,6 +1,6 @@
-## Unreleased
+## 0.8.1
 
-- Fixed `Reference.fullPath` to return the bucket-relative slash-path (e.g. `images/photo.png`) instead of a `gs://{bucket}{path}` URI, matching real Firebase Storage. The leading slash is also stripped.
+Fixed `Reference.fullPath` to return the bucket-relative slash-path (e.g. `images/photo.png`) instead of a `gs://{bucket}{path}` URI, matching real Firebase Storage. The leading slash is also stripped. [PR-46](https://github.com/atn832/firebase_storage_mocks/pull/46). Thank you [nickmeinhold](https://github.com/nickmeinhold)!
 
 ## 0.8.0+1
 
