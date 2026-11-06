@@ -1,3 +1,7 @@
+## 0.9.0
+
+- Upgraded dependency to firebase_storage 14.0.0. [PR-47](https://github.com/atn832/firebase_storage_mocks/pull/47). Thank you [jt274](https://github.com/jt274)!
+
 ## 0.8.1
 
 Fixed `Reference.fullPath` to return the bucket-relative slash-path (e.g. `images/photo.png`) instead of a `gs://{bucket}{path}` URI, matching real Firebase Storage. The leading slash is also stripped. [PR-46](https://github.com/atn832/firebase_storage_mocks/pull/46). Thank you [nickmeinhold](https://github.com/nickmeinhold)!
